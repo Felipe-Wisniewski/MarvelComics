@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".View.MarvelsActivity" />
-        <activity android:name=".View.CharacterActivity"></activity>
+        <activity android:name=".View.CharacterActivity" />
     </application>
 
 </manifest>

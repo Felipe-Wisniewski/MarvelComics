@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.felipewisniewski.marvelcomics.Business.Character;
 import com.felipewisniewski.marvelcomics.Model.HttpHandler;
@@ -18,7 +19,9 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MarvelsActivity extends Activity {
@@ -47,7 +50,7 @@ public class MarvelsActivity extends Activity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
+        new GetCharacters().execute();
     }
 
     private class GetCharacters extends AsyncTask<Void, Void, Void> {
@@ -74,7 +77,8 @@ public class MarvelsActivity extends Activity {
                     JSONObject jsonObject = new JSONObject(jsonStr);
 
                     //GET JSON com Array de Personagens
-                    JSONArray characters = jsonObject.getJSONArray("results");
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    JSONArray characters = data.getJSONArray("results");
 
                     //Preeche lista de Personagens
                     for(int i=0; i < characters.length(); i++) {
@@ -85,34 +89,54 @@ public class MarvelsActivity extends Activity {
                         String description = c.getString("description");
 
                         JSONObject img = c.getJSONObject("thumbnail");
-                        String thumbnail = img.getString("path");
+                        String path = img.getString("path");
+                        String ext = img.getString("extension");
 
                         Character cha = new Character();
                         cha.id = id;
                         cha.name = name;
                         cha.description = description;
-                        cha.thumbnail = thumbnail;
+                        cha.thumbnail = path + "." + ext;
 
                         charactersList.add(cha);
                     }
                 } catch (final JSONException e) {
-
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Json parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
+            } else {
+                Log.e(TAG, "Error from server");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Error from Server", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
 
+            if(progressDialog.isShowing())
+                progressDialog.dismiss();
+
+            marvelsAdapter = new MarvelsAdapter(charactersList, MarvelsActivity.this);
+            recyclerView.setAdapter(marvelsAdapter);
         }
 
         public String geraUrl() {
             String urlGerada;
-            Long tsLong = System.currentTimeMillis()/1000;
-            String ts = tsLong.toString();
-            String hash = ts + publicKey + privateKey;
+
+            String ts = new SimpleDateFormat("yyyyMMddHHmmssZ").format(new Date());
+            String hash = ts + privateKey + publicKey;
             String md5 = geraMd5(hash);
 
             urlGerada = url + "?ts=" + ts + "&apikey=" + publicKey + "&hash=" + md5;

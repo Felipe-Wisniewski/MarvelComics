@@ -2,6 +2,7 @@ package com.felipewisniewski.marvelcomics.View;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,17 +25,29 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
 
     @Override
     public ViewHolderMarvels onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+
+        View view = layoutInflater.inflate(R.layout.list_character, parent, false);
+        ViewHolderMarvels holderMarvels = new ViewHolderMarvels(view);
+
+        return holderMarvels;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolderMarvels holder, int position) {
+    public void onBindViewHolder(final MarvelsAdapter.ViewHolderMarvels holder, final int position) {
+        if((listCharacter != null) && (listCharacter.size() > 0)) {
+            final Character cha = listCharacter.get(position);
+
+
+            holder.txtName.setText(cha.getName());
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return listCharacter.size();
     }
 
 
