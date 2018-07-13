@@ -2,4 +2,7 @@
     <string name="app_name">MarvelComics</string>
     <string name="textview">TextView</string>
     <string name="thumbnail">thumbnail</string>
+    <string name="txtNameChar">Name Character</string>
+    <string name="descChar">Descripition</string>
+    <string name="imgChar">Img</string>
 </resources>

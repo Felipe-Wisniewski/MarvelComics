@@ -1,6 +1,7 @@
 package com.felipewisniewski.marvelcomics.View;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.felipewisniewski.marvelcomics.Business.Character;
 import com.felipewisniewski.marvelcomics.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -35,12 +37,21 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final MarvelsAdapter.ViewHolderMarvels holder, final int position) {
+    public void onBindViewHolder(final ViewHolderMarvels holder, final int position) {
         if((listCharacter != null) && (listCharacter.size() > 0)) {
             final Character cha = listCharacter.get(position);
 
-
             holder.txtName.setText(cha.getName());
+            Picasso.get().load(cha.getThumbnail()).fit().centerInside().into(holder.imgHero);
+
+            holder.txtName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, CharacterActivity.class);
+                    intent.putExtra("id", cha.id);
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }
