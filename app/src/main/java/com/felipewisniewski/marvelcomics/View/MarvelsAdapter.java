@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.felipewisniewski.marvelcomics.Business.Character;
+import com.felipewisniewski.marvelcomics.Presenter.Character;
 import com.felipewisniewski.marvelcomics.R;
 import com.squareup.picasso.Picasso;
 
@@ -40,15 +40,15 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
     public void onBindViewHolder(final ViewHolderMarvels holder, final int position) {
         if((listCharacter != null) && (listCharacter.size() > 0)) {
             final Character cha = listCharacter.get(position);
+            final String[] character = {cha.getName(), cha.getDescription(), cha.getThumbnail()};
 
-            holder.txtName.setText(cha.getName());
             Picasso.get().load(cha.getThumbnail()).fit().centerInside().into(holder.imgHero);
-
+            holder.txtName.setText(cha.getName());
             holder.txtName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, CharacterActivity.class);
-                    intent.putExtra("id", cha.id);
+                    intent.putExtra("character", character);
                     context.startActivity(intent);
                 }
             });

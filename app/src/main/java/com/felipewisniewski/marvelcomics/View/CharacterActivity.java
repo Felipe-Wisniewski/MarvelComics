@@ -7,13 +7,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.felipewisniewski.marvelcomics.R;
+import com.squareup.picasso.Picasso;
 
 public class CharacterActivity extends Activity {
 
     private ImageView characterPicture;
     private TextView characterName, characterDescripition;
 
-    private String charId;
+    private String[] character;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,10 @@ public class CharacterActivity extends Activity {
         characterDescripition = findViewById(R.id.desc_character_txt_id);
 
         Intent intent = getIntent();
-        charId = intent.getStringExtra("id");
+        character = intent.getStringArrayExtra("character");
 
+        characterName.setText(character[0]);
+        characterDescripition.setText(character[1]);
+        Picasso.get().load(character[2]).fit().centerInside().into(characterPicture);
     }
 }
