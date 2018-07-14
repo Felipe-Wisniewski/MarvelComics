@@ -20,9 +20,9 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
     private List<Character> listCharacter;
     private Context context;
 
-    public MarvelsAdapter(List<Character> listC, Context MarvelsActivity) {
+    public MarvelsAdapter(List<Character> listC, Context marvelsActivity) {
         this.listCharacter = listC;
-        this.context = MarvelsActivity;
+        this.context = marvelsActivity;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-        View view = layoutInflater.inflate(R.layout.list_character, parent, false);
+        View view = layoutInflater.inflate(R.layout.list_characters, parent, false);
         ViewHolderMarvels holderMarvels = new ViewHolderMarvels(view);
 
         return holderMarvels;
@@ -40,10 +40,11 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
     public void onBindViewHolder(final ViewHolderMarvels holder, final int position) {
         if((listCharacter != null) && (listCharacter.size() > 0)) {
             final Character cha = listCharacter.get(position);
-            final String[] character = {cha.getName(), cha.getDescription(), cha.getThumbnail()};
+            final String[] character = {cha.getId(), cha.getName(), cha.getDescription(), cha.getThumbnail()};
 
             Picasso.get().load(cha.getThumbnail()).fit().centerInside().into(holder.imgHero);
             holder.txtName.setText(cha.getName());
+
             holder.txtName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

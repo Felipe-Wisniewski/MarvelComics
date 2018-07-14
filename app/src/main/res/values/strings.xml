@@ -5,4 +5,8 @@
     <string name="txtNameChar">Name Character</string>
     <string name="descChar">Descripition</string>
     <string name="imgChar">Img</string>
+    <string name="personagens_marvel">Personagens Marvel</string>
+    <string name="background_marvels">bg_marvels</string>
+    <string name="button">Participações Comics</string>
+    <string name="textview_comics">Comics Participation</string>
 </resources>

@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.felipewisniewski.marvelcomics.Model.HttpHandler;
-import com.felipewisniewski.marvelcomics.View.MarvelsAdapter;
+import com.felipewisniewski.marvelcomics.View.ComicsAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,21 +21,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
-
-    static  String TAG = "GetAllCharacters: ";
+public class GetComics extends AsyncTask<Void, Void, Void> {
+    private static String TAG = "GetComics: ";
     private Context context;
+    private String charId;
 
-    private RecyclerView recycleV;
-    private MarvelsAdapter marvelsAdapter;
+    private RecyclerView recyclerView;
+    private ComicsAdapter comicsAdapter;
 
-    private List<Character> charactersList = new ArrayList<>();
+    private List<Comics> comicsList = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
-    public GetAllCharacters(Context context, RecyclerView r) {
+    public GetComics(Context context, RecyclerView r, String id) {
         this.context = context;
-        this.recycleV = r;
+        this.recyclerView = r;
+        this.charId = id;
     }
 
     @Override
@@ -50,7 +51,6 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        Log.e(TAG, "start doInBackground");
         String jsonStr = null;
 
         while(jsonStr == null){
@@ -58,32 +58,25 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
             String url = getUrl();
             jsonStr = sh.makeServiceCall(url);
         }
-
         Log.e(TAG, "Retorno JSON: " + jsonStr);
         try {
             JSONObject jsonObject = new JSONObject(jsonStr);
             JSONObject data = jsonObject.getJSONObject("data");
-            JSONArray characters = data.getJSONArray("results");
+            JSONArray comics = data.getJSONArray("results");
 
-            for(int i=0; i < characters.length(); i++) {
-                JSONObject c = characters.getJSONObject(i);
+            for(int i=0; i < comics.length(); i++) {
+                JSONObject c = comics.getJSONObject(i);
                 String id = c.getString("id");
-                String name = c.getString("name");
+                String title = c.getString("title");
                 String description = c.getString("description");
 
-                JSONObject img = c.getJSONObject("thumbnail");
-                String path = img.getString("path");
-                String ext = img.getString("extension");
-
-                Character cha = new Character();
-                cha.id = id;
-                cha.name = name;
-                cha.description = description;
-                cha.thumbnail = path + "." + ext;
-                charactersList.add(cha);
+                Comics co = new Comics();
+                co.setId(id);
+                co.setTitle(title);
+                co.setDescription(description);
+                comicsList.add(co);
             }
-            Log.e(TAG, "done doInBackground");
-
+            Log.e(TAG, "done for doInBackground");
         } catch (final JSONException e) {
             Log.e(TAG, "Json parsing error: " + e.getMessage());
         }
@@ -97,16 +90,15 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
         if(progressDialog.isShowing()) progressDialog.dismiss();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        recycleV.setLayoutManager(linearLayoutManager);
-        marvelsAdapter = new MarvelsAdapter(charactersList, context);
-        recycleV.setAdapter(marvelsAdapter);
-
+        recyclerView.setLayoutManager(linearLayoutManager);
+        comicsAdapter = new ComicsAdapter(comicsList);
+        recyclerView.setAdapter(comicsAdapter);
         Log.e(TAG, "onPostExecute()");
     }
 
     private String getUrl() {
         String urlGerada;
-        String url = "https://gateway.marvel.com/v1/public/characters";
+        String url = "https://gateway.marvel.com/v1/public/characters/" + charId + "/comics";
         String publicKey = "c5c18968ee42b81da321e004e05a5205";
         String privateKey = "58d89f57c259281e1a61d6d484825354a2cecd2b";
 
@@ -136,4 +128,5 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
         }
         return "";
     }
+
 }
