@@ -53,6 +53,15 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
                     context.startActivity(intent);
                 }
             });
+
+            holder.imgHero.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, CharacterActivity.class);
+                    intent.putExtra("character", character);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
