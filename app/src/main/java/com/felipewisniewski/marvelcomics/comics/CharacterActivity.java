@@ -1,4 +1,4 @@
-package com.felipewisniewski.marvelcomics.View;
+package com.felipewisniewski.marvelcomics.comics;
 
 import android.app.Activity;
 import android.content.Intent;

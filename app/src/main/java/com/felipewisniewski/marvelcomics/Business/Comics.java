@@ -1,8 +1,9 @@
-package com.felipewisniewski.marvelcomics.Presenter;
+package com.felipewisniewski.marvelcomics.Business;
 
 public class Comics {
 
     private String id;
+    private String total;
     private String title;
     private String description;
 
@@ -16,4 +17,7 @@ public class Comics {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getTotal() { return total; }
+    public void setTotal(String total) { this.total = total; }
 }

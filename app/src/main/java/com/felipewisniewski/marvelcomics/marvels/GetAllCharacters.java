@@ -1,14 +1,14 @@
-package com.felipewisniewski.marvelcomics.Presenter;
+package com.felipewisniewski.marvelcomics.marvels;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.felipewisniewski.marvelcomics.Model.HttpHandler;
-import com.felipewisniewski.marvelcomics.View.MarvelsAdapter;
+import com.felipewisniewski.marvelcomics.Business.Character;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -96,8 +96,8 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
 
         if(progressDialog.isShowing()) progressDialog.dismiss();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        recycleV.setLayoutManager(linearLayoutManager);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
+        recycleV.setLayoutManager(gridLayoutManager);
         marvelsAdapter = new MarvelsAdapter(charactersList, context);
         recycleV.setAdapter(marvelsAdapter);
 

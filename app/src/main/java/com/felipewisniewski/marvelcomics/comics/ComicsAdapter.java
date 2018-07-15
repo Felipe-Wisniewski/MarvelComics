@@ -1,4 +1,4 @@
-package com.felipewisniewski.marvelcomics.View;
+package com.felipewisniewski.marvelcomics.comics;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.felipewisniewski.marvelcomics.Presenter.Comics;
+import com.felipewisniewski.marvelcomics.Business.Comics;
 import com.felipewisniewski.marvelcomics.R;
 
 import java.util.List;
@@ -18,6 +18,8 @@ public class ComicsAdapter extends RecyclerView.Adapter<ComicsAdapter.ViewHolder
     public ComicsAdapter(List<Comics> listCo) {
         this.listComics = listCo;
     }
+
+    public ComicsAdapter() {}
 
     @Override
     public ViewHolderComics onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,5 +50,9 @@ public class ComicsAdapter extends RecyclerView.Adapter<ComicsAdapter.ViewHolder
             super(itemView);
             txtComicParticipation = itemView.findViewById(R.id.txt_comics_list_id);
         }
+    }
+
+    public void setListComics(List<Comics> listComics) {
+        this.listComics = listComics;
     }
 }

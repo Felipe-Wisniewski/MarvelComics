@@ -1,4 +1,4 @@
-package com.felipewisniewski.marvelcomics.View;
+package com.felipewisniewski.marvelcomics.marvels;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.felipewisniewski.marvelcomics.Presenter.Character;
+import com.felipewisniewski.marvelcomics.Business.Character;
 import com.felipewisniewski.marvelcomics.R;
+import com.felipewisniewski.marvelcomics.comics.CharacterActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

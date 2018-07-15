@@ -1,10 +1,9 @@
-package com.felipewisniewski.marvelcomics.View;
+package com.felipewisniewski.marvelcomics.marvels;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
-import com.felipewisniewski.marvelcomics.Presenter.GetAllCharacters;
 import com.felipewisniewski.marvelcomics.R;
 
 public class MarvelsActivity extends Activity {

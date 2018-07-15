@@ -1,4 +1,4 @@
-package com.felipewisniewski.marvelcomics.Presenter;
+package com.felipewisniewski.marvelcomics.Business;
 
 public class Character {
 

@@ -1,14 +1,13 @@
-package com.felipewisniewski.marvelcomics.Presenter;
+package com.felipewisniewski.marvelcomics.comics;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.felipewisniewski.marvelcomics.Business.Comics;
 import com.felipewisniewski.marvelcomics.Model.HttpHandler;
-import com.felipewisniewski.marvelcomics.View.ComicsAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,22 +20,36 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GetComics extends AsyncTask<Void, Void, Void> {
-    private static String TAG = "GetComics: ";
+public class GetAllComics extends AsyncTask<Integer, Void, Void> {
+    private static String TAG = "GetAllComics: ";
     private Context context;
     private String charId;
 
-    private RecyclerView recyclerView;
-    private ComicsAdapter comicsAdapter;
+    public RecyclerView recyclerView;
+    private ComicsAdapter adapter;
+    private Boolean adapterInstanciado;
 
-    private List<Comics> comicsList = new ArrayList<>();
+    static List<Comics> comicsList;
+
+    private int total;
+    static int offSet;
 
     private ProgressDialog progressDialog;
 
-    public GetComics(Context context, RecyclerView r, String id) {
-        this.context = context;
+    public GetAllComics(ComicsActivity v, RecyclerView r, ComicsAdapter coAdp, String id) {
+        this.context = v;
         this.recyclerView = r;
         this.charId = id;
+        this.adapter = coAdp;
+        comicsList = new ArrayList<>();
+        adapterInstanciado = false;
+    }
+
+    public GetAllComics(ComicsActivity v, ComicsAdapter coAdp, String id) {
+        this.context = v;
+        this.charId = id;
+        this.adapter = coAdp;
+        adapterInstanciado = true;
     }
 
     @Override
@@ -50,18 +63,20 @@ public class GetComics extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Void doInBackground(Integer... os) {
         String jsonStr = null;
 
         while(jsonStr == null){
             HttpHandler sh = new HttpHandler();
-            String url = getUrl();
+            String url = getUrl(os[0]);
             jsonStr = sh.makeServiceCall(url);
         }
         Log.e(TAG, "Retorno JSON: " + jsonStr);
         try {
             JSONObject jsonObject = new JSONObject(jsonStr);
             JSONObject data = jsonObject.getJSONObject("data");
+            total = data.getInt("total");
+            offSet = data.getInt("offset");
             JSONArray comics = data.getJSONArray("results");
 
             for(int i=0; i < comics.length(); i++) {
@@ -75,6 +90,7 @@ public class GetComics extends AsyncTask<Void, Void, Void> {
                 co.setTitle(title);
                 co.setDescription(description);
                 comicsList.add(co);
+                offSet++;
             }
             Log.e(TAG, "done for doInBackground");
         } catch (final JSONException e) {
@@ -85,20 +101,25 @@ public class GetComics extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        super.onPostExecute(result);
+       if(progressDialog.isShowing()) progressDialog.dismiss();
 
-        if(progressDialog.isShowing()) progressDialog.dismiss();
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        comicsAdapter = new ComicsAdapter(comicsList);
-        recyclerView.setAdapter(comicsAdapter);
-        Log.e(TAG, "onPostExecute()");
+       if(!adapterInstanciado){
+           adapter.setListComics(comicsList);
+           recyclerView.setAdapter(adapter);
+       }
+       adapter.notifyDataSetChanged();
+       Log.e(TAG, "onPostExecute()");
     }
 
-    private String getUrl() {
+    public List<Comics> getComicsList() { return comicsList; }
+
+    public int getTotal() { return total; }
+
+    public int getOffSet() { return offSet; }
+
+    private String getUrl(Integer offset) {
         String urlGerada;
-        String url = "https://gateway.marvel.com/v1/public/characters/" + charId + "/comics";
+        String url = "https://gateway.marvel.com/v1/public/characters/" + charId + "/comics?offset=" + offset.toString();
         String publicKey = "c5c18968ee42b81da321e004e05a5205";
         String privateKey = "58d89f57c259281e1a61d6d484825354a2cecd2b";
 
@@ -106,7 +127,7 @@ public class GetComics extends AsyncTask<Void, Void, Void> {
         String hash = ts + privateKey + publicKey;
         String md5 = getMd5(hash);
 
-        urlGerada = url + "?ts=" + ts + "&apikey=" + publicKey + "&hash=" + md5;
+        urlGerada = url + "&ts=" + ts + "&apikey=" + publicKey + "&hash=" + md5;
         return urlGerada;
     }
 
