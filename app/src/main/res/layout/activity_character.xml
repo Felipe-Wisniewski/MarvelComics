@@ -12,9 +12,8 @@
         android:layout_height="415dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:contentDescription="@string/imgChar"
         android:src="@android:drawable/ic_menu_gallery" />
 
@@ -22,10 +21,10 @@
         android:id="@+id/name_character_txt_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/desc_character_txt_id"
+        android:layout_below="@+id/picture_character_img_id"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/txtNameChar"
         android:textSize="30sp" />
 
@@ -33,11 +32,10 @@
         android:id="@+id/desc_character_txt_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/name_character_txt_id"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="116dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/descChar" />
 
     <Button
@@ -47,8 +45,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text="@string/button" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/button"
+        android:textSize="24sp" />
 
 </RelativeLayout>

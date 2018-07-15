@@ -1,12 +1,13 @@
 <resources>
-    <string name="app_name">MarvelComics</string>
+    <string name="app_name">Marvel Comics</string>
     <string name="textview">TextView</string>
     <string name="thumbnail">thumbnail</string>
     <string name="txtNameChar">Name Character</string>
     <string name="descChar">Descripition</string>
     <string name="imgChar">Img</string>
-    <string name="personagens_marvel">Personagens Marvel</string>
+    <string name="personagens_marvel">ALL CHARACTERS</string>
     <string name="background_marvels">bg_marvels</string>
-    <string name="button">Participações Comics</string>
+    <string name="button">COMICS PARTICIPATIONS</string>
     <string name="textview_comics">Comics Participation</string>
+    <string name="comics">COMICS</string>
 </resources>
