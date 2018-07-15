@@ -21,8 +21,8 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
     private List<Character> listCharacter;
     private Context context;
 
-    public MarvelsAdapter(List<Character> listC, Context marvelsActivity) {
-        this.listCharacter = listC;
+    public MarvelsAdapter(Context marvelsActivity) {
+     //   this.listCharacter = listC;
         this.context = marvelsActivity;
     }
 
@@ -30,7 +30,6 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
     public ViewHolderMarvels onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-
         View view = layoutInflater.inflate(R.layout.list_characters, parent, false);
         ViewHolderMarvels holderMarvels = new ViewHolderMarvels(view);
 
@@ -55,14 +54,12 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
                 }
             });
         }
-
     }
 
     @Override
     public int getItemCount() {
         return listCharacter.size();
     }
-
 
     public class ViewHolderMarvels extends RecyclerView.ViewHolder {
         public TextView txtName;
@@ -74,6 +71,10 @@ public class MarvelsAdapter extends RecyclerView.Adapter<MarvelsAdapter.ViewHold
             txtName = itemView.findViewById(R.id.nameCharacterId);
             imgHero = itemView.findViewById(R.id.imageCharacterId);
         }
+    }
+
+    public void setListCharacter(List<Character> listCharacter) {
+        this.listCharacter = listCharacter;
     }
 }
 

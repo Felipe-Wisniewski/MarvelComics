@@ -25,7 +25,7 @@ public class GetAllComics extends AsyncTask<Integer, Void, Void> {
     private Context context;
     private String charId;
 
-    public RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private ComicsAdapter adapter;
     private Boolean adapterInstanciado;
 
@@ -59,7 +59,6 @@ public class GetAllComics extends AsyncTask<Integer, Void, Void> {
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        Log.e(TAG, "onPreExecute()");
     }
 
     @Override
@@ -92,7 +91,6 @@ public class GetAllComics extends AsyncTask<Integer, Void, Void> {
                 comicsList.add(co);
                 offSet++;
             }
-            Log.e(TAG, "done for doInBackground");
         } catch (final JSONException e) {
             Log.e(TAG, "Json parsing error: " + e.getMessage());
         }

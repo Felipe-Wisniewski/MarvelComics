@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.felipewisniewski.marvelcomics.R;
 
 public class ComicsActivity extends Activity {
     private RecyclerView rView;
     private GridLayoutManager gridLayoutManager;
-    public ComicsAdapter comicsAdapter;
+    private ComicsAdapter comicsAdapter;
     private GetAllComics getAllComics;
     private String charId;
 
@@ -37,10 +36,8 @@ public class ComicsActivity extends Activity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.e("STATUS: ",getAllComics.getStatus().toString());
                 if(gridLayoutManager.findLastCompletelyVisibleItemPosition() == getAllComics.getComicsList().size() -1) {
                     if(getAllComics.getOffSet() != getAllComics.getTotal()) {
-                        Log.e("ComicsActivity: ","addOnScrollListener -> IF");
                         getAllComics = new GetAllComics(ComicsActivity.this, comicsAdapter, charId);
                         getAllComics.execute(getAllComics.getOffSet());
                     }

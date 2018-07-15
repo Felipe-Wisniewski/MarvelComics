@@ -3,12 +3,11 @@ package com.felipewisniewski.marvelcomics.marvels;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.felipewisniewski.marvelcomics.Model.HttpHandler;
 import com.felipewisniewski.marvelcomics.Business.Character;
+import com.felipewisniewski.marvelcomics.Model.HttpHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,21 +20,33 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
-
+public class GetAllCharacters extends AsyncTask<Integer, Void, Void> {
     static  String TAG = "GetAllCharacters: ";
     private Context context;
 
-    private RecyclerView recycleV;
+    private RecyclerView recyclerView;
     private MarvelsAdapter marvelsAdapter;
+    private Boolean adapterInstanciado;
 
-    private List<Character> charactersList = new ArrayList<>();
+    static List<Character> charactersList;
+
+    private int total;
+    static int offSet;
 
     private ProgressDialog progressDialog;
 
-    public GetAllCharacters(Context context, RecyclerView r) {
-        this.context = context;
-        this.recycleV = r;
+    public GetAllCharacters(MarvelsActivity m, RecyclerView r, MarvelsAdapter ma) {
+        this.context = m;
+        this.recyclerView = r;
+        this.marvelsAdapter = ma;
+        charactersList  = new ArrayList<>();
+        adapterInstanciado = false;
+    }
+
+    public GetAllCharacters(MarvelsActivity m, MarvelsAdapter ma) {
+        this.context = m;
+        this.marvelsAdapter = ma;
+        adapterInstanciado = true;
     }
 
     @Override
@@ -45,17 +56,15 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        Log.e(TAG, "onPreExecute()");
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-        Log.e(TAG, "start doInBackground");
+    protected Void doInBackground(Integer... os) {
         String jsonStr = null;
 
         while(jsonStr == null){
             HttpHandler sh = new HttpHandler();
-            String url = getUrl();
+            String url = getUrl(os[0]);
             jsonStr = sh.makeServiceCall(url);
         }
 
@@ -63,6 +72,8 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
         try {
             JSONObject jsonObject = new JSONObject(jsonStr);
             JSONObject data = jsonObject.getJSONObject("data");
+            total = data.getInt("total");
+            offSet = data.getInt("offset");
             JSONArray characters = data.getJSONArray("results");
 
             for(int i=0; i < characters.length(); i++) {
@@ -81,9 +92,8 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
                 cha.description = description;
                 cha.thumbnail = path + "." + ext;
                 charactersList.add(cha);
+                offSet++;
             }
-            Log.e(TAG, "done doInBackground");
-
         } catch (final JSONException e) {
             Log.e(TAG, "Json parsing error: " + e.getMessage());
         }
@@ -92,21 +102,30 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        super.onPostExecute(result);
-
         if(progressDialog.isShowing()) progressDialog.dismiss();
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
-        recycleV.setLayoutManager(gridLayoutManager);
-        marvelsAdapter = new MarvelsAdapter(charactersList, context);
-        recycleV.setAdapter(marvelsAdapter);
-
-        Log.e(TAG, "onPostExecute()");
+        if(!adapterInstanciado){
+            marvelsAdapter.setListCharacter(charactersList);
+            recyclerView.setAdapter(marvelsAdapter);
+        }
+        marvelsAdapter.notifyDataSetChanged();
     }
 
-    private String getUrl() {
+    public List<Character> getCharactersList() {
+        return charactersList;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public int getOffSet() {
+        return offSet;
+    }
+
+    private String getUrl(Integer offset) {
         String urlGerada;
-        String url = "https://gateway.marvel.com/v1/public/characters";
+        String url = "https://gateway.marvel.com/v1/public/characters?offset=" + offset.toString();
         String publicKey = "c5c18968ee42b81da321e004e05a5205";
         String privateKey = "58d89f57c259281e1a61d6d484825354a2cecd2b";
 
@@ -114,7 +133,7 @@ public class GetAllCharacters extends AsyncTask<Void, Void, Void> {
         String hash = ts + privateKey + publicKey;
         String md5 = getMd5(hash);
 
-        urlGerada = url + "?ts=" + ts + "&apikey=" + publicKey + "&hash=" + md5;
+        urlGerada = url + "&ts=" + ts + "&apikey=" + publicKey + "&hash=" + md5;
         return urlGerada;
     }
 
