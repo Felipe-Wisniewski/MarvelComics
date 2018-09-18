@@ -119,7 +119,7 @@ public class GetAllComics extends AsyncTask<Integer, Void, Void> {
         String urlGerada;
         String url = "https://gateway.marvel.com/v1/public/characters/" + charId + "/comics?offset=" + offset.toString();
         String publicKey = "c5c18968ee42b81da321e004e05a5205";
-        String privateKey = "58d89f57c259281e1a61d6d484825354a2cecd2b";
+        String privateKey = "PRIVATE KEY";
 
         String ts = new SimpleDateFormat("yyyyMMddHHmmssZ").format(new Date());
         String hash = ts + privateKey + publicKey;
